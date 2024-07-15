@@ -1,0 +1,62 @@
+const { MongoClient } = require('mongodb');
+require('dotenv').config();
+
+async function main() {
+    const uri = process.env.MONGODB_URI;
+    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+    try {
+        await client.connect();
+
+        const database = client.db('RDProvincesDB');
+        const collection = database.collection('Provinces');
+
+        const provinces = [
+            { name: 'Azua' },
+            { name: 'Baoruco' },
+            { name: 'Barahona' },
+            { name: 'Dajabón' },
+            { name: 'Distrito Nacional' },
+            { name: 'Duarte' },
+            { name: 'Elías Piña' },
+            { name: 'El Seibo' },
+            { name: 'Espaillat' },
+            { name: 'Hato Mayor' },
+            { name: 'Hermanas Mirabal' },
+            { name: 'Independencia' },
+            { name: 'La Altagracia' },
+            { name: 'La Romana' },
+            { name: 'La Vega' },
+            { name: 'María Trinidad Sánchez' },
+            { name: 'Monseñor Nouel' },
+            { name: 'Monte Cristi' },
+            { name: 'Monte Plata' },
+            { name: 'Pedernales' },
+            { name: 'Peravia' },
+            { name: 'Puerto Plata' },
+            { name: 'Samaná' },
+            { name: 'Sánchez Ramírez' },
+            { name: 'San Cristóbal' },
+            { name: 'San José de Ocoa' },
+            { name: 'San Juan' },
+            { name: 'San Pedro de Macorís' },
+            { name: 'Santiago' },
+            { name: 'Santiago Rodríguez' },
+            { name: 'Santo Domingo' },
+            { name: 'Valverde' }
+        ];
+
+        await collection.insertMany(provinces);
+
+        const result = await collection.find({}).toArray();
+        console.log('Provinces of the Dominican Republic:');
+        result.forEach(province => console.log(province.name));
+
+    } catch (err) {
+        console.error(err);
+    } finally {
+        await client.close();
+    }
+}
+
+main().catch(console.error);
